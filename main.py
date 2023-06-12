@@ -2,13 +2,13 @@
 @Author: shubham shirke
 @Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2022-06-12 17:30:30
-@Title : To delete contact in address book.
+@Last Modified time: 2022-06-12 17:42:30
+@Title : To add multiple contacts in dictionary in address book.
 '''
 from AddressBook_Service import *
 
 def main():
-    address_book = AddressBook()  # creating instace of a class
+    address_book = AddressBook()  # creating instance of a class
     while True:
         print()
         print("--Address Book System--")
@@ -34,7 +34,7 @@ def main():
         elif choice == 4:
             address_book.display_contact()
 
-        elif choice == 3:
+        elif choice == 5:
             return False
         else:
             print("[error] Selected option is wrong")
