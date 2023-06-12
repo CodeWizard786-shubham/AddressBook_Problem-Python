@@ -1,9 +1,9 @@
 '''
 @Author: shubham shirke
-@Date: 2021-02-13 12:30:30
+@Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2021-02-11 2:50:30
-@Title : To add a contact in address book.
+@Last Modified time: 2022-06-12 4:30:30
+@Title : To update existing contact in address book.
 '''
 from AddressBook_Service import *
 
@@ -14,14 +14,19 @@ def main():
         print("--Address Book System--")
         print("-----------------------")
         print("1.Add contact")
-        print("2.Print Contact")
-        print("3.Exit")
+        print("2.Update Contact")
+        print("3.Print Contact")
+        print("4.Exit")
         print("-----------------------")
         choice = int(input("Enter choice: "))  
         if choice == 1:
             address_book.add_contact()
 
         elif choice == 2:
+            first_name = input("Enter first name to update: ")
+            address_book.update_contact(first_name)
+
+        elif choice == 3:
             address_book.display_contact()
 
         elif choice == 3:
