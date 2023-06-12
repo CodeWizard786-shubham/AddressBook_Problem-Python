@@ -45,6 +45,14 @@ class AddressBook:
 
 
     def fetch_contact(self,first_name):
+        """
+        Description : 
+                This function fetches contact from contact list uing first name.
+        Parameters :
+                first_name : first name of the contact to remove.
+        Returns :
+                contact : contact from contacts list.
+        """
         for contact in self.contacts:
             if contact.first_name == first_name:
                 return contact
@@ -79,7 +87,28 @@ class AddressBook:
         else:
             input("Contact not found. Hit enter to continue")
 
-    # display address Book
+
+    # remove contact from address Book        
+    def remove_contact(self,first_name):
+        """
+        Description :   
+                    This function checks if the first name in present in contact 
+                    if it is present, take the inputs from user again ,find the index number and update the contact. 
+        Parameters :
+                    self : self.contacts list.
+        Returns :
+                    none
+                    prints update message.
+        """
+        contact = self.fetch_contact(first_name)
+        if contact:
+            self.contacts.remove(contact)
+            print("Contact removed successfully")
+        else:
+            input("Contact not found. Hit enter to continue")
+
+
+    # display contacts from address Book
     def display_contact(self):
         """
         Description : 
