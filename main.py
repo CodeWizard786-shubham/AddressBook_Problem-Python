@@ -46,6 +46,7 @@ def main():
                 address_book.update_address_book(address_book_name)
             elif user_choice == 4:
                 while True:
+                    print()
                     print("--Search contacts in AddressBook--")
                     print("1. Search by state")
                     print("2. Search by City")
