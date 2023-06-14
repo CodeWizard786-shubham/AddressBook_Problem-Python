@@ -30,8 +30,9 @@ def main():
             print("1.Add AddressBook")
             print("2.Remove AddressBook")
             print("3.Edit AddressBook")
-            print("4.Print AddressBook")
-            print("5.Exit")
+            print("4.Search AddressBook")
+            print("5.Print AddressBook")
+            print("6.Exit")
             print("-------------------")
             user_choice = int(input("Enter choice: "))
             if user_choice == 1:
@@ -44,8 +45,22 @@ def main():
                 address_book_name = input("Enter Address book name to update: ")
                 address_book.update_address_book(address_book_name)
             elif user_choice == 4:
-                address_book.display_address_books()
+                while True:
+                    print("--Search contacts in AddressBook--")
+                    print("1. Search in state")
+                    print("2. Exit")
+                    user_search_choice =int(input("Enter choice: "))
+                    if user_search_choice == 1: 
+                        state_name = input("Enter state name to search: ")
+                        state_contacts = address_book.search_address_book_for_state(state_name)
+                        address_book.print_state_contacts(state_contacts)
+                    elif user_search_choice == 2:
+                        return main()
+                    else:
+                        logger.warning("Please enter correct choice")
             elif user_choice == 5:
+                address_book.display_address_books()
+            elif user_choice == 6:
                 logger.info("Thank you for using Address Book system ")
                 return False
             else :
