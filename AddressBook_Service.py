@@ -216,7 +216,9 @@ class AddressBook:
                 prints contacts 
         """
         try:
+            search_count_count = len(search_contacts) 
             if len(search_contacts) >= 1:
+                print(f"contacts count by '{search_name}': {search_count_count}")
                 print(f"The contacts are:")
                 for search_name,contact in search_contacts.items():           
                     print(f"Name:'{search_name}' \n[{contact}]")
