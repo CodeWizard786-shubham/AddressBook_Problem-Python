@@ -2,8 +2,8 @@
 @Author: shubham shirke
 @Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2022-06-13 3:21:30
-@Title : Refactor to implement loggers in Address book system.
+@Last Modified time: 2022-06-14 21:30:30
+@Title : Providing search contacts by state or city to user in Address book system.
 '''
 from logger import logger
 from AddressBook_Service import *
@@ -47,15 +47,42 @@ def main():
             elif user_choice == 4:
                 while True:
                     print("--Search contacts in AddressBook--")
-                    print("1. Search in state")
-                    print("2. Exit")
+                    print("1. Search by state")
+                    print("2. Search by City")
+                    print("3. Exit")
                     user_search_choice =int(input("Enter choice: "))
+                    #search by state
                     if user_search_choice == 1: 
                         state_name = input("Enter state name to search: ")
-                        state_contacts = address_book.search_address_book_for_state(state_name)
-                        address_book.print_state_contacts(state_contacts)
-                    elif user_search_choice == 2:
-                        return main()
+                        print("Enter choice: \n 1:Display contact names \n 2:Display full contacts")
+                        user_state_choice = int(input("Enter choice: "))
+                        if user_state_choice == 1:
+                            state_contacts,state_name = address_book.search_address_book_by_state(state_name,user_state_choice)
+                            address_book.print_search_contacts(state_contacts,state_name)
+                        elif user_state_choice == 2:
+                            state_contacts,search_name = address_book.search_address_book_by_state(state_name,user_state_choice)
+                            address_book.print_search_contacts(state_contacts,state_name)
+                        elif user_state_choice == 3:
+                            break
+                        else:
+                            logger.warning("Invalid option: enter correct option")
+                    # search by city
+                    elif user_search_choice == 2: 
+                        city_name = input("Enter city name to search: ")
+                        print("Enter choice: \n 1:Display contact names \n 2:Display full contacts")
+                        user_city_choice = int(input("Enter choice: "))
+                        if user_city_choice == 1:
+                            city_contacts,city_name = address_book.search_address_book_by_city(city_name,user_city_choice)
+                            address_book.print_search_contacts(city_contacts,city_name)
+                        elif user_city_choice == 2:
+                            city_contacts,city_name = address_book.search_address_book_by_city(city_name,user_city_choice)
+                            address_book.print_search_contacts(city_contacts,city_name)
+                        elif user_state_choice == 3:
+                            break
+                        else:
+                            logger.warning("Invalid option: enter correct option")
+                    elif user_search_choice == 3:
+                        break
                     else:
                         logger.warning("Please enter correct choice")
             elif user_choice == 5:
