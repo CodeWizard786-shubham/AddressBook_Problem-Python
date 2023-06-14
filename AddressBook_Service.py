@@ -139,7 +139,8 @@ class AddressBook:
             print(f"| AddressBook:{address_book_name} |")
             print("|------------------------------------------------------------------------------------------------------------------------------|")
             contact_number = 1
-            for contact_name, contact in address_book.items():
+            sorted_contacts = sorted(address_book.items(), key=lambda contact: contact[0])
+            for contact_name, contact in sorted_contacts:
                 print(f"| Contact {contact_number}: {contact_name} : {contact}|")
                 contact_number += 1
             logger.info("Address Book Records displayed Succesfully")
@@ -307,7 +308,7 @@ class AddressBook:
 
                 logger.info("Contact updated successfully")
             else:
-                logger.warning("Contact not found. Hit enter to continue")
+                logger.warning("Contact not found")
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -341,17 +342,20 @@ class AddressBook:
         try:
             address_book = self.address_books.get(address_book_name)
             if address_book:
+                contact_number = 1
+                sorted_contacts = sorted(address_book.items(), key=lambda contact: contact[0])
                 print("|-----------------------------------------------------------------|")
                 print(f"|  Contacts in '{address_book_name}'                             |")                           
                 print("|-----------------------------------------------------------------|")
-                for contact in address_book.values():
-                    print(contact)
+                for contact_name,contact in sorted_contacts:
+                    print(f"Contact {contact_number}: {contact}")
                     print()
+                    contact_number +=1
                 print("|-----------------------------------------------------------------|")
             else:
                 logger.warning(f"contacts not found in '{address_book_name}'")
 
-            input("Contacts displayed. Hit Enter to continue!")
+            logger.info("Contacts displayed")
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
