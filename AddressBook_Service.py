@@ -1,3 +1,4 @@
+from logger import logger
 # class Contact with user inputs
 class Contact:
     def __init__(self, first_name,last_name,address,city,state,zip,phone_number, email):
@@ -35,12 +36,15 @@ class AddressBook:
                 none
                 prints message
         """
-        if address_book_name in self.address_books:
-            print(f"Address Book with name '{address_book_name}' already exists.")  
-        else:
-            self.address_books[address_book_name] = {}
-            print(f"Address Book with name '{address_book_name}' is successfully created")
-            
+        try:
+            if address_book_name in self.address_books:
+                logger.warning(f"Address Book with name '{address_book_name}' already exists.")  
+            else:
+                self.address_books[address_book_name] = {}
+                logger.info(f"Address Book with name '{address_book_name}' is successfully created")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+
 
     def fetch_address_book(self,address_book_name):
         """
@@ -53,23 +57,41 @@ class AddressBook:
         """
         for address_book_key, address_book_value in self.address_books.items():
             if address_book_key == address_book_name:
-                return address_book_value
+                return address_book_key
         return None        
 
 
     def remove_address_book(self,address_book_name):
+        """
+        Description : 
+                This function takes address book name from user and if it exist in address books dictionary deletes the particular address book.
+        Parameters  :
+                address_book_name : name of the address book to delete.
+        Retruns :
+                none
+                print delete message
+        """
         address_book = self.fetch_address_book(address_book_name)
 
         if address_book:
             self.address_books.pop(address_book_name)
-            print("Removed Address Book successfully")
+            logger.info("Removed Address Book successfully")
         else:
-            print(f"Address Book with name {address_book_name} not found")
+            logger.warning(f"Address Book with name {address_book_name} not found")
 
 
     def update_address_book(self,address_book_name):
+        """
+        Description : 
+                    This function allows to edit particular address book. Managing contacts from address book.
+        Parameters :
+                    address_book_name : name of the address book to edit.
+        Returns    :
+                    logs
+                    displays contact system interface
+        """
         if address_book_name not in self.address_books:
-            print(f"Address Book with name '{address_book_name}' does not exists.")     
+            logger.warning(f"Address Book with name '{address_book_name}' does not exists.")     
         else:
             while True:
                 print()
@@ -99,7 +121,7 @@ class AddressBook:
                 elif choice == 5:
                     return False
                 else:
-                    print("[error] Selected option is wrong")
+                    logger.error("[error] Selected option is wrong")
 
     # display address Book
     def display_address_books(self):
@@ -120,6 +142,7 @@ class AddressBook:
             for contact_name, contact in address_book.items():
                 print(f"| Contact {contact_number}: {contact_name} : {contact}|")
                 contact_number += 1
+            logger.info("Address Book Records displayed Succesfully")
             
 
     # add contacts
@@ -133,20 +156,27 @@ class AddressBook:
                 none
                 prints contact added successfully
         """
-        print("Please enter contact details to add contact")
-        first_name =input("Enter first name: ")
-        second_name = input("Enter second name: ")
-        address =input("Enter address: ")
-        city =input("Enter city: ")
-        state =input("Enter state: ")
-        zip =int(input("Enter zip: "))
-        phone_number =int(input("Enter phone number: "))
-        email_id = input("Enter email id: ")
-        contact = Contact(first_name,second_name,address,city,state,zip,phone_number,email_id)
-        self.address_books[address_book_name][first_name] = contact
-        print("Contact Added Succesfully")
+        try:
+            print("Please enter contact details to add contact")
+            first_name =input("Enter first name: ")
+            contact = self.fetch_contact(address_book_name,first_name)
+            if not contact:
+                second_name = input("Enter second name: ")
+                address =input("Enter address: ")
+                city =input("Enter city: ")
+                state =input("Enter state: ")
+                zip =int(input("Enter zip: "))
+                phone_number =int(input("Enter phone number: "))
+                email_id = input("Enter email id: ")
+                contact = Contact(first_name,second_name,address,city,state,zip,phone_number,email_id)
+                self.address_books[address_book_name][first_name] = contact
+                logger.info("Contact Added Succesfully")
+            else:
+                logger.warning(f"Contact with name '{first_name}' already exists")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
-
+    # search contact in address book
     def fetch_contact(self, address_book_name, first_name):
         """
         Descrption : 
@@ -174,26 +204,29 @@ class AddressBook:
                     none
                     prints update message.
         """
-        contact = self.fetch_contact(address_book_name,first_name)
-        if contact:
-            print("Please enter contact details for update")
-            new_first_name =input("Enter first name: ")
-            second_name = input("Enter second name: ")
-            address =input("Enter address: ")
-            city =input("Enter city: ")
-            state =input("Enter state: ")
-            zip =int(input("Enter zip: "))
-            phone_number =int(input("Enter phone number: "))
-            email_id = input("Enter email id: ")
-            new_contact = Contact(new_first_name,second_name,address,city,state,zip,phone_number,email_id)
-            self.address_books[address_book_name][new_first_name] = new_contact
+        try:
+            contact = self.fetch_contact(address_book_name,first_name)
+            if contact:
+                print("Please enter contact details for update")
+                new_first_name =input("Enter first name: ")
+                second_name = input("Enter second name: ")
+                address =input("Enter address: ")
+                city =input("Enter city: ")
+                state =input("Enter state: ")
+                zip =int(input("Enter zip: "))
+                phone_number =int(input("Enter phone number: "))
+                email_id = input("Enter email id: ")
+                new_contact = Contact(new_first_name,second_name,address,city,state,zip,phone_number,email_id)
+                self.address_books[address_book_name][new_first_name] = new_contact
 
             if first_name != new_first_name:
                 del self.address_books[address_book_name][first_name]
 
-            print("Contact updated successfully")
-        else:
-            input("Contact not found. Hit enter to continue")
+                logger.info("Contact updated successfully")
+            else:
+                logger.warning("Contact not found. Hit enter to continue")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
 
     # remove contact from address Book        
@@ -210,29 +243,36 @@ class AddressBook:
                     none
                     prints update message.
         """
-        contact = self.fetch_contact(address_book_name,first_name)
-        if contact:
-            del self.address_books[address_book_name][first_name]
-            print("Contact removed successfully")
-        else:
-            print("Contact not found")
-
+        try:
+            contact = self.fetch_contact(address_book_name,first_name)
+            if contact:
+                del self.address_books[address_book_name][first_name]
+                logger.info("Contact removed successfully")
+            else:
+                logger.warning("Contact not found")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
     # display contacts from address Book
     def display_contacts(self, address_book_name):
-        address_book = self.address_books.get(address_book_name)
-        if address_book:
-            print("|-----------------------------------------------------------------|")
-            print(f"|  Contacts in '{address_book_name}'                             |")                           
-            print("|-----------------------------------------------------------------|")
-            for contact in address_book.values():
-                print(contact)
-                print()
-            print("|-----------------------------------------------------------------|")
-        else:
-            print(f"contacts not found in '{address_book_name}'")
+        try:
+            address_book = self.address_books.get(address_book_name)
+            if address_book:
+                print("|-----------------------------------------------------------------|")
+                print(f"|  Contacts in '{address_book_name}'                             |")                           
+                print("|-----------------------------------------------------------------|")
+                for contact in address_book.values():
+                    print(contact)
+                    print()
+                print("|-----------------------------------------------------------------|")
+            else:
+                logger.warning(f"contacts not found in '{address_book_name}'")
 
-        input("Contacts displayed. Hit Enter to continue!")
+            input("Contacts displayed. Hit Enter to continue!")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+
+
 
 
 
