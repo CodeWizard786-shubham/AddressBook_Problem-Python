@@ -12,7 +12,7 @@ class Contact:
         self.email = email
     
     def __str__(self):
-        return (f" First name: {self.first_name}, Last Name: {self.last_name}, Address: {self.address}, City: {self.city}, Zip: {self.zip}, Phone-Number: {self.phone_number}, Email: {self.email} ")
+        return (f" First name: {self.first_name}, Last Name: {self.last_name}, Address: {self.address}, City: {self.city}, State: {self.state}, Zip: {self.zip}, Phone-Number: {self.phone_number}, Email: {self.email} ")
 
 
 # Addressbook Operations
@@ -144,44 +144,87 @@ class AddressBook:
                 contact_number += 1
             logger.info("Address Book Records displayed Succesfully")
 
-    # search contacts by state.    
-    def search_address_book_for_state(self, state_name):
+    # search contacts by state    
+    def search_address_book_by_state(self, state_name,user_state_choice):
         """
         Description : 
                 This function searches all the address books to find contacts with user specified state_name. 
         Parameters :
                 self : self.address_books is the main address book system dictionary
-                state_name : name of the state by user input to find contacts 
+                state_name : name of the state by user input to find contacts
+                user_state_choice : choice option to find name or whole contacts for state. 
         Returns   :
                 state_contacts : state contacts dictionary
         """
+
         try:
             state_contacts = {}
-            for address_book_name, address_book in self.address_books.items():
-                for contact_name, contact in address_book.items():
-                    if contact.state == state_name:
-                        state_contacts[state_name] = contact
-            
-            return state_contacts
+            if user_state_choice == 1:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.state == state_name:
+                            state_contacts[contact_name] = contact.state
+                return state_contacts,state_name
+            elif user_state_choice == 2:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.state == state_name:
+                            state_contacts[contact_name] = contact
+                return state_contacts,state_name
         except Exception as e:
-            logger.warning(f" contacts with state '{state_name}' not found")
+            logger.warning(f" contacts with '{state_name}' not found")
 
-    # print contats from state_contacts dictionary
-    def print_state_contacts(self,state_contacts):
+    # search contacts by city.    
+    def search_address_book_by_city(self, city_name,user_city_choice):
         """
         Description : 
-                This function prints each contact from state_contacts dict.
+                This function searches all the address books to find contacts with user specified city_name.
         Parameters :
-                state_contacts : dictionary of state contacts.
+                self : self.address_books is the main address book system dictionary
+                city_name : name of the state or city by user input to find contacts
+                user_city_choice : choice option to find name or whole contacts for city. 
+        Returns   :
+                city_contacts : state or city contacts dictionary
+        """
+
+        try:
+            city_contacts = {}
+            if user_city_choice == 1:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.city == city_name:
+                            city_contacts[contact_name] = contact.city
+                return city_contacts,city_name
+            elif user_city_choice == 2:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.city == city_name:
+                            city_contacts[contact_name] = contact
+                return city_contacts,city_name
+        except Exception as e:
+            logger.warning(f" contacts with '{city_name}' not found")
+
+    # print contats from state_contacts dictionary
+    def print_search_contacts(self,search_contacts,search_name):
+        """
+        Description : 
+                This function prints each contact from search_contacts dict.
+        Parameters :
+                search_contacts : dictionary of state or city contacts.
         Returns :
                 none
                 prints contacts 
         """
         try:
-            for state_name,contact in state_contacts.items():
-                print(f"The contacts from {state_name} are: \n {contact}")
+            if len(search_contacts) >= 1:
+                print(f"The contacts are:")
+                for search_name,contact in search_contacts.items():           
+                    print(f"Name:'{search_name}' \n[{contact}]")
+            else:
+                logger.warning(f"Contacts from '{search_name}' not found")
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
+
 
     # add contacts
     def add_contact(self,address_book_name):
