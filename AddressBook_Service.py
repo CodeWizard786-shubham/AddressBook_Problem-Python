@@ -79,7 +79,7 @@ class AddressBook:
         else:
             logger.warning(f"Address Book with name {address_book_name} not found")
 
-
+    # edit address_book
     def update_address_book(self,address_book_name):
         """
         Description : 
@@ -143,7 +143,45 @@ class AddressBook:
                 print(f"| Contact {contact_number}: {contact_name} : {contact}|")
                 contact_number += 1
             logger.info("Address Book Records displayed Succesfully")
+
+    # search contacts by state.    
+    def search_address_book_for_state(self, state_name):
+        """
+        Description : 
+                This function searches all the address books to find contacts with user specified state_name. 
+        Parameters :
+                self : self.address_books is the main address book system dictionary
+                state_name : name of the state by user input to find contacts 
+        Returns   :
+                state_contacts : state contacts dictionary
+        """
+        try:
+            state_contacts = {}
+            for address_book_name, address_book in self.address_books.items():
+                for contact_name, contact in address_book.items():
+                    if contact.state == state_name:
+                        state_contacts[state_name] = contact
             
+            return state_contacts
+        except Exception as e:
+            logger.warning(f" contacts with state '{state_name}' not found")
+
+    # print contats from state_contacts dictionary
+    def print_state_contacts(self,state_contacts):
+        """
+        Description : 
+                This function prints each contact from state_contacts dict.
+        Parameters :
+                state_contacts : dictionary of state contacts.
+        Returns :
+                none
+                prints contacts 
+        """
+        try:
+            for state_name,contact in state_contacts.items():
+                print(f"The contacts from {state_name} are: \n {contact}")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
     # add contacts
     def add_contact(self,address_book_name):
