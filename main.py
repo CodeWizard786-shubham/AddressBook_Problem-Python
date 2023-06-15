@@ -2,8 +2,8 @@
 @Author: shubham shirke
 @Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2022-06-14 21:30:30
-@Title : Providing search contacts by state or city to user in Address book system.
+@Last Modified time: 2022-06-14 09:45:30
+@Title : Sorting contacts from addressbooks by state or city.
 '''
 from logger import logger
 from AddressBook_Service import *
@@ -31,8 +31,9 @@ def main():
             print("2.Remove AddressBook")
             print("3.Edit AddressBook")
             print("4.Search AddressBook")
-            print("5.Print AddressBook")
-            print("6.Exit")
+            print("5.Sort AddressBook")
+            print("6.Print AddressBook")
+            print("7.Exit")
             print("-------------------")
             user_choice = int(input("Enter choice: "))
             if user_choice == 1:
@@ -61,7 +62,7 @@ def main():
                             state_contacts,state_name = address_book.search_address_book_by_state(state_name,user_state_choice)
                             address_book.print_search_contacts(state_contacts,state_name)
                         elif user_state_choice == 2:
-                            state_contacts,search_name = address_book.search_address_book_by_state(state_name,user_state_choice)
+                            state_contacts,state_name = address_book.search_address_book_by_state(state_name,user_state_choice)
                             address_book.print_search_contacts(state_contacts,state_name)
                         elif user_state_choice == 3:
                             break
@@ -70,7 +71,7 @@ def main():
                     # search by city
                     elif user_search_choice == 2: 
                         city_name = input("Enter city name to search: ")
-                        print("Enter choice: \n 1:Display contact names \n 2:Display full contacts")
+                        print("Enter choice: \n 1.Display contact names \n 2.Display full contacts \n 3.Exit")
                         user_city_choice = int(input("Enter choice: "))
                         if user_city_choice == 1:
                             city_contacts,city_name = address_book.search_address_book_by_city(city_name,user_city_choice)
@@ -87,8 +88,22 @@ def main():
                     else:
                         logger.warning("Please enter correct choice")
             elif user_choice == 5:
-                address_book.display_address_books()
+                print("--sort contacts--")
+                print("1.Sort by city \n2.Sort by state \n3.Exit")
+                user_sort_choice = int(input("Enter choice: "))
+                if user_sort_choice == 1:
+                    sorted_contacts = address_book.sort_address_book(user_sort_choice)
+                    address_book.print_sorted_contacts(sorted_contacts)
+                elif user_sort_choice == 2:
+                    sorted_contacts = address_book.sort_address_book(user_sort_choice)
+                    address_book.print_sorted_contacts(sorted_contacts)
+                elif user_sort_choice == 3:
+                    break
+                else:
+                    logger.warning("Invalid option: enter correct option")
             elif user_choice == 6:
+                address_book.display_address_books()
+            elif user_choice == 7:
                 logger.info("Thank you for using Address Book system ")
                 return False
             else :
