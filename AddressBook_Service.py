@@ -228,6 +228,48 @@ class AddressBook:
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
+    # sort address_book
+    def sort_address_book(self, user_sort_choice):
+        """
+        Description : 
+                This function stores the contacs from the address books to sorted contacts dictionary . key as city or state and value as contact.
+        Parameters :
+                user_sort_choice : user choice option to get contacts for state or city.
+        Returns :
+                sorted_contacts : dictionary consisting state or city as key and contacts as value.
+        """
+        try:
+            sorted_contacts = {}
+            if user_sort_choice == 1:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.city not in sorted_contacts:
+                            sorted_contacts[contact.city] = contact
+
+            elif user_sort_choice == 2:
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        if contact.state not in sorted_contacts:
+                            sorted_contacts[contact.state] = contact
+            return sorted_contacts
+
+        except Exception as e:
+            logger.warning("Contact not found")
+
+    # print sorted address book
+    def print_sorted_contacts(self, sorted_contacts):
+        try:
+            if len(sorted_contacts) >= 1:
+                sorted_contacts = dict(sorted(sorted_contacts.items()))
+                print()
+                for sort_name, contact in sorted_contacts.items():
+                    print(f"{sort_name}: {contact}")
+                print()
+            else:
+                logger.warning("Contacts not found")
+
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
     # add contacts
     def add_contact(self,address_book_name):
