@@ -2,8 +2,8 @@
 @Author: shubham shirke
 @Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2022-06-16 05:15:30
-@Title : Read and write text file in address book system.
+@Last Modified time: 2022-06-16 21:30:30
+@Title : Read and write csv file in address book system.
 '''
 from logger import logger
 from AddressBook_Service import *
@@ -24,12 +24,15 @@ def main():
         address_book = AddressBook()  # creating instance of a class
         print("--Welcome to Address Book System--")
         print("How would you like to read and write file in address book system?")
-        print("1.Text file \n2.Exit")
+        print("1.Text file\n2.CSV File\n3.Exit")
         file_option =int(input("Enter option: "))
         if file_option == 1: 
             file_name = input("Enter Text file name: ")
             address_book.read_address_books_from_file(file_name)
-        elif file_option == 2:
+        elif file_option == 2: 
+            file_name = input("Enter CSV file name: ")
+            address_book.read_address_books_from_csv(file_name)
+        elif file_option == 3:
             logger.error("File not found")
 
         while True:
@@ -114,7 +117,10 @@ def main():
                 address_book.display_address_books()
             elif user_choice == 7:
                 logger.info("Thank you for using Address Book system ")
-                address_book.write_address_books_to_file("address_books.txt")
+                if file_option == 1:
+                    address_book.write_address_books_to_file(file_name)
+                elif file_option == 2:
+                    address_book.write_address_books_to_csv(file_name)
                 break
             else :
                 logger.error("[error] : enter valid option")
