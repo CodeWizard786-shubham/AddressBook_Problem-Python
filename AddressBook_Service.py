@@ -1,4 +1,6 @@
 from logger import logger
+import os
+import ast
 # class Contact with user inputs
 class Contact:
     def __init__(self, first_name,last_name,address,city,state,zip,phone_number, email):
@@ -25,6 +27,52 @@ class AddressBook:
         Resturns : address books dictionary
         """
         self.address_books = {}
+
+
+    def read_address_books_from_file(self, filename):
+        """
+        Description : 
+                    This function fetches contents from a text file and stores it in the address_books dictionary.
+                    Here the contact object is serialize(str to contact object)   
+        Parameters :
+                    filename : name of the file to read from
+        Returns    : 
+                    none            
+        """
+        try:
+            with open(filename, 'r') as file:
+                data = ast.literal_eval(file.read())
+                self.address_books = {}
+                self.address_books = {address_book_name: {contact_name: Contact(**contact_data)
+                                                          for contact_name, contact_data in address_book.items()}
+                                      for address_book_name, address_book in data.items()}
+            logger.info(f"Address books loaded from '{filename}'")
+        except FileNotFoundError:
+            with open(filename, 'w') as file:
+                file.write(f"{{}}")
+                print(f"File '{filename}' created.")
+        except Exception as e:
+            logger.error(f"An error occurred while reading address books from file: {str(e)}")
+
+    def write_address_books_to_file(self, filename):
+        """
+        Description : 
+                    This function stores contents to a text file from the address_books dictionary in a format.
+                    Here the contact object is deserialize(contact object to str)   
+        Parameters :
+                    filename : name of the file to write
+        Returns    : 
+                    none            
+        """
+        try:
+            data = {address_book_name: {contact_name: contact.__dict__
+                                        for contact_name, contact in address_book.items()}
+                    for address_book_name, address_book in self.address_books.items()}
+            with open(filename, 'w') as file:
+                file.write(str(data))
+            logger.info(f"Address books saved to '{filename}'")
+        except Exception as e:
+            logger.error(f"An error occurred while writing address books to file: {str(e)}")
 
     def add_address_books(self,address_book_name):
         """
@@ -134,16 +182,22 @@ class AddressBook:
                 none
                 prints address book name , contact from address book
         """
-        for address_book_name, address_book in self.address_books.items():
-            print()
-            print(f"| AddressBook:{address_book_name} |")
-            print("|------------------------------------------------------------------------------------------------------------------------------|")
-            contact_number = 1
-            sorted_contacts = sorted(address_book.items(), key=lambda contact: contact[0])
-            for contact_name, contact in sorted_contacts:
-                print(f"| Contact {contact_number}: {contact_name} : {contact}|")
-                contact_number += 1
-            logger.info("Address Book Records displayed Succesfully")
+        try:
+            if len(self.address_books) >=1 :
+                for address_book_name, address_book in self.address_books.items():
+                    print()
+                    print(f"| AddressBook:{address_book_name} |")
+                    print("|------------------------------------------------------------------------------------------------------------------------------|")
+                    contact_number = 1
+                    sorted_contacts = sorted(address_book.items(), key=lambda contact: contact[0])
+                    for contact_name, contact in sorted_contacts:
+                        print(f"| Contact {contact_number}: {contact_name} : {contact}|")
+                        contact_number += 1
+                    logger.info("Address Book Records displayed Succesfully")
+            else:
+                logger.warning("Address books not found ")
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
 
     # search contacts by state    
     def search_address_book_by_state(self, state_name,user_state_choice):
@@ -400,6 +454,7 @@ class AddressBook:
             logger.info("Contacts displayed")
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
+
 
 
 
