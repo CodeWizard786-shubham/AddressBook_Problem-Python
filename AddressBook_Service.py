@@ -1,6 +1,7 @@
 from logger import logger
 import os
 import ast
+import csv
 # class Contact with user inputs
 class Contact:
     def __init__(self, first_name,last_name,address,city,state,zip,phone_number, email):
@@ -28,7 +29,7 @@ class AddressBook:
         """
         self.address_books = {}
 
-
+    # read from file
     def read_address_books_from_file(self, filename):
         """
         Description : 
@@ -53,7 +54,8 @@ class AddressBook:
                 print(f"File '{filename}' created.")
         except Exception as e:
             logger.error(f"An error occurred while reading address books from file: {str(e)}")
-
+    
+    # write to file
     def write_address_books_to_file(self, filename):
         """
         Description : 
@@ -73,6 +75,72 @@ class AddressBook:
             logger.info(f"Address books saved to '{filename}'")
         except Exception as e:
             logger.error(f"An error occurred while writing address books to file: {str(e)}")
+
+    # read csv file
+    def read_address_books_from_csv(self, filename):
+        """
+        Description: 
+            This function reads the address books from a CSV file and populates the address_books dictionary.
+        Parameters:
+            filename: Name of the CSV file to read.
+        Returns:
+            None
+        """
+        try:
+            self.address_books = {}  # Clear existing address books
+
+            with open(filename, 'r', newline='') as file:
+                reader = csv.DictReader(file)
+
+                for row in reader:
+                    address_book_name = row['AddressBook Name']
+                    contact_name = row['Contact Name']
+                    contact = Contact(
+                        row['First name'],
+                        row['Last Name'],
+                        row['Address'],
+                        row['City'],
+                        row['State'],
+                        row['Zip Code'],
+                        row['Phone Number'],
+                        row['Email ID']
+                    )
+
+                    if address_book_name not in self.address_books:
+                        self.address_books[address_book_name] = {}
+
+                    self.address_books[address_book_name][contact_name] = contact
+
+            logger.info(f"Address books loaded from '{filename}'")
+        except FileNotFoundError:
+            logger.info(f"File '{filename}' not found. Creating a new address book.")
+            self.address_books = {}
+        except Exception as e:
+            logger.error(f"An error occurred while reading address books from file: {str(e)}")
+       
+
+    # write csv file
+    def write_address_books_to_csv(self,filename):
+        """
+        Description: 
+                This function stores contents to a CSV file from the address_books dictionary.
+        Parameters:
+                filename: name of the CSV file to write
+        Returns: 
+                None            
+        """
+        try:
+            with open(filename, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['AddressBook Name', 'Contact Name', 'First name','Last Name','Address','City','State','Zip Code','Phone Number','Email ID'])
+                for address_book_name, address_book in self.address_books.items():
+                    for contact_name, contact in address_book.items():
+                        writer.writerow([address_book_name, contact_name, contact.first_name,contact.last_name,contact.address,contact.city,contact.state,contact.zip,contact.phone_number,contact.email])
+            logger.info(f"Address books saved to '{filename}'")
+        except Exception as e:
+            logger.error(f"An error occurred while writing address books to file: {str(e)}")
+
+
 
     def add_address_books(self,address_book_name):
         """
