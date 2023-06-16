@@ -2,8 +2,8 @@
 @Author: shubham shirke
 @Date: 2023-06-12 10:30:30
 @Last Modified by: shubham shirke
-@Last Modified time: 2022-06-14 09:45:30
-@Title : Sorting contacts from addressbooks by state or city.
+@Last Modified time: 2022-06-16 05:15:30
+@Title : Read and write text file in address book system.
 '''
 from logger import logger
 from AddressBook_Service import *
@@ -22,6 +22,15 @@ def main():
     """
     try:
         address_book = AddressBook()  # creating instance of a class
+        print("--Welcome to Address Book System--")
+        print("How would you like to read and write file in address book system?")
+        print("1.Text file \n2.Exit")
+        file_option =int(input("Enter option: "))
+        if file_option == 1: 
+            file_name = input("Enter Text file name: ")
+            address_book.read_address_books_from_file(file_name)
+        elif file_option == 2:
+            logger.error("File not found")
 
         while True:
             print()
@@ -105,14 +114,14 @@ def main():
                 address_book.display_address_books()
             elif user_choice == 7:
                 logger.info("Thank you for using Address Book system ")
-                return False
+                address_book.write_address_books_to_file("address_books.txt")
+                break
             else :
                 logger.error("[error] : enter valid option")
     except Exception as e:
          logger.error('An error occurred: %s', str(e))
 
     logger.info('Program finished')
-
 
 if __name__ == "__main__":
     main()
