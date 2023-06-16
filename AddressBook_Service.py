@@ -2,6 +2,7 @@ from logger import logger
 import os
 import ast
 import csv
+import json
 # class Contact with user inputs
 class Contact:
     def __init__(self, first_name,last_name,address,city,state,zip,phone_number, email):
@@ -113,7 +114,7 @@ class AddressBook:
 
             logger.info(f"Address books loaded from '{filename}'")
         except FileNotFoundError:
-            logger.info(f"File '{filename}' not found. Creating a new address book.")
+            logger.warning(f"File '{filename}' not found. Creating a new address book.")
             self.address_books = {}
         except Exception as e:
             logger.error(f"An error occurred while reading address books from file: {str(e)}")
@@ -140,6 +141,47 @@ class AddressBook:
         except Exception as e:
             logger.error(f"An error occurred while writing address books to file: {str(e)}")
 
+    # read Json file
+    def read_address_books_from_json(self,filename):
+        """
+        Description: 
+                This function fetches content from json file and stores to the address_books dictionary.
+        Parameters:
+                filename: name of the json file to write
+        Returns: 
+                None            
+        """
+        try:
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                self.address_books = {address_book_name: {contact_name: Contact(**contact_data)
+                                                          for contact_name, contact_data in address_book.items()}
+                                      for address_book_name, address_book in data.items()}
+            logger.info(f"Address books loaded from '{filename}'")
+        except FileNotFoundError:
+            logger.warning(f"File '{filename}' not found.Creating a new address book.")
+        except Exception as e:
+            logger.error(f"An error occurred while reading address books from file: {str(e)}")
+
+    # write Json file
+    def write_address_books_to_json(self,filename):
+        """
+        Description: 
+                This function stores contents to a json file from the address_books dictionary.
+        Parameters:
+                filename: name of the json file to write
+        Returns: 
+                None            
+        """
+        try:
+            data = {address_book_name: {contact_name: contact.__dict__
+                                        for contact_name, contact in address_book.items()}
+                    for address_book_name, address_book in self.address_books.items()}
+            with open(filename, 'w') as file:
+                json.dump(data, file, indent=4)
+            logger.info(f"Address books saved to '{filename}'")
+        except Exception as e:
+            logger.error(f"An error occurred while writing address books to file: {str(e)}")
 
 
     def add_address_books(self,address_book_name):
