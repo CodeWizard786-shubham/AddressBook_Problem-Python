@@ -113,9 +113,11 @@ class AddressBook:
                     self.address_books[address_book_name][contact_name] = contact
 
             logger.info(f"Address books loaded from '{filename}'")
+            return True
         except FileNotFoundError:
             logger.warning(f"File '{filename}' not found. Creating a new address book.")
             self.address_books = {}
+            return False
         except Exception as e:
             logger.error(f"An error occurred while reading address books from file: {str(e)}")
        
@@ -138,8 +140,10 @@ class AddressBook:
                     for contact_name, contact in address_book.items():
                         writer.writerow([address_book_name, contact_name, contact.first_name,contact.last_name,contact.address,contact.city,contact.state,contact.zip,contact.phone_number,contact.email])
             logger.info(f"Address books saved to '{filename}'")
+            return True
         except Exception as e:
             logger.error(f"An error occurred while writing address books to file: {str(e)}")
+            return False
 
     # read Json file
     def read_address_books_from_json(self,filename):
@@ -158,8 +162,10 @@ class AddressBook:
                                                           for contact_name, contact_data in address_book.items()}
                                       for address_book_name, address_book in data.items()}
             logger.info(f"Address books loaded from '{filename}'")
+            return True
         except FileNotFoundError:
             logger.warning(f"File '{filename}' not found.Creating a new address book.")
+            return False
         except Exception as e:
             logger.error(f"An error occurred while reading address books from file: {str(e)}")
 
@@ -180,8 +186,10 @@ class AddressBook:
             with open(filename, 'w') as file:
                 json.dump(data, file, indent=4)
             logger.info(f"Address books saved to '{filename}'")
+            return True
         except Exception as e:
             logger.error(f"An error occurred while writing address books to file: {str(e)}")
+            return False
 
 
     def add_address_books(self,address_book_name):
@@ -197,9 +205,11 @@ class AddressBook:
         try:
             if address_book_name in self.address_books:
                 logger.warning(f"Address Book with name '{address_book_name}' already exists.")  
+                return False
             else:
                 self.address_books[address_book_name] = {}
                 logger.info(f"Address Book with name '{address_book_name}' is successfully created")
+                return True
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -234,8 +244,10 @@ class AddressBook:
         if address_book:
             self.address_books.pop(address_book_name)
             logger.info("Removed Address Book successfully")
+            return True
         else:
             logger.warning(f"Address Book with name {address_book_name} not found")
+            return False
 
     # edit address_book
     def update_address_book(self,address_book_name):
@@ -249,7 +261,8 @@ class AddressBook:
                     displays contact system interface
         """
         if address_book_name not in self.address_books:
-            logger.warning(f"Address Book with name '{address_book_name}' does not exists.")     
+            logger.warning(f"Address Book with name '{address_book_name}' does not exists.")   
+            return False  
         else:
             while True:
                 print()
@@ -304,8 +317,10 @@ class AddressBook:
                         print(f"| Contact {contact_number}: {contact_name} : {contact}|")
                         contact_number += 1
                     logger.info("Address Book Records displayed Succesfully")
+                return True
             else:
-                logger.warning("Address books not found ")
+                logger.warning("Address books not found")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -387,8 +402,11 @@ class AddressBook:
                 print(f"The contacts are:")
                 for search_name,contact in search_contacts.items():           
                     print(f"Name:'{search_name}' \n[{contact}]")
+
+                return True
             else:
                 logger.warning(f"Contacts from '{search_name}' not found")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -429,8 +447,10 @@ class AddressBook:
                 for sort_name, contact in sorted_contacts.items():
                     print(f"{sort_name}: {contact}")
                 print()
+                return True
             else:
                 logger.warning("Contacts not found")
+                return False
 
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
@@ -461,8 +481,10 @@ class AddressBook:
                 contact = Contact(first_name,second_name,address,city,state,zip,phone_number,email_id)
                 self.address_books[address_book_name][first_name] = contact
                 logger.info("Contact Added Succesfully")
+                return True
             else:
                 logger.warning(f"Contact with name '{first_name}' already exists")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -513,10 +535,13 @@ class AddressBook:
                 del self.address_books[address_book_name][first_name]
 
                 logger.info("Contact updated successfully")
+                return True
             else:
                 logger.warning("Contact not found")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
+
 
 
     # remove contact from address Book        
@@ -538,8 +563,10 @@ class AddressBook:
             if contact:
                 del self.address_books[address_book_name][first_name]
                 logger.info("Contact removed successfully")
+                return True
             else:
                 logger.warning("Contact not found")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
@@ -558,10 +585,11 @@ class AddressBook:
                     print()
                     contact_number +=1
                 print("|-----------------------------------------------------------------|")
+                logger.info("Contacts Displayed successfully")
+                return True
             else:
                 logger.warning(f"contacts not found in '{address_book_name}'")
-
-            logger.info("Contacts displayed")
+                return False
         except Exception as e:
             logger.error('An error occurred: %s', str(e))
 
